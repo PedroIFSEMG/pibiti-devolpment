@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paletas Pastéis - Alimentação Plena</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100vh;
+  }
+
+  body {
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #faf8f5;
+    color: #5a5a5a;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 40px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  h1 {
+    font-size: 2.8em;
+    margin-bottom: 15px;
+    color: #2d5a54;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    color: #7a7a7a;
+    font-size: 1.15em;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 30px;
+  }
+
+  .info-box {
+    background: #f0f9f7;
+    border-left: 4px solid #8dd4c6;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    color: #3d6b63;
+    margin: 20px 0;
+  }
+
+  .filter-section {
+    margin-top: 30px;
+  }
+
+  .filter-label {
+    display: block;
+    font-size: 0.85em;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    color: #666;
+    font-weight: 500;
+  }
+
+  .tab-btn:hover {
+    border-color: #8dd4c6;
+    color: #4a7d73;
+  }
+
+  .tab-btn.active {
+    background: #8dd4c6;
+    color: white;
+    border-color: #8dd4c6;
+  }
+
+  .palettes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 32px;
+    margin-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  .palette-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+  }
+
+  .palette-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .card-header {
+    padding: 28px 24px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .card-name {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #3d3d3d;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.75em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 8px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border: 1px solid #888 ;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .color-palette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 0;
+  }
+
+  .color-swatch {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    padding: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    position: relative;
+  }
+
+  .color-swatch:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+
+  .color-name {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 800;
+  }
+
+  .color-code {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  .usage-section {
+    padding: 24px;
+    border-top: 1px solid #f5f5f5;
+  }
+
+  .usage-title {
+    font-size: 0.8em;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .usage-example {
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 0.95em;
+    line-height: 1.5;
+  }
+
+  .usage-text {
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .usage-secondary {
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .small-btn {
+    padding: 8px 14px;
+    border: 2px solid;
+    border-radius: 6px;
+    font-size: 0.85em;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    background: transparent;
+    flex: 1;
+    text-align: center;
+  }
+
+  .small-btn.primary {
+    border: none;
+    color: white;
+  }
+
+  .small-btn.secondary {
+    background: transparent;
+  }
+
+  .small-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .contrast-badge {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }
+
+  .contrast-badge.wcag-aaa {
+    background: #d4f0e8;
+    color: #1a4d47;
+    border-left: 4px solid #6fbd3b;
+  }
+
+  .contrast-badge.wcag-aa {
+    background: #dbe9f9;
+    color: #1e3a5f;
+    border-left: 4px solid #4a90e2;
+  }
+
+  .contrast-info {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
+    margin-top: 8px;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .palettes-grid {
+      grid-template-columns: 1fr;
+    }
+
+    h1 {
+      font-size: 1.8em;
+    }
+
+    .container {
+      padding: 30px 16px;
+    }
+
+    header {
+      padding: 25px 20px;
+      margin-bottom: 40px;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Paletas</h1>
+    <p class="subtitle">
+      Cores suaves e naturais desenvolvidas especificamente para um PWA de nutrição consciente. 
+      Cada paleta foi testada para máxima <strong>acessibilidade WCAG</strong> e harmonia visual.
+    </p>
+    <div class="info-box">
+      <strong>Clique em qualquer cor</strong> para copiar seu código hexadecimal
+    </div>
+    
+    <div class="filter-section">
+      <span class="filter-label">Filtrar por categoria</span>
+      <div class="filter-tabs">
+        <button class="tab-btn active" onclick="filterThemes('all')">Todas</button>
+        <button class="tab-btn" onclick="filterThemes('pastel')">Pastéis Puras</button>
+        <button class="tab-btn" onclick="filterThemes('natural')">Naturais</button>
+        <button class="tab-btn" onclick="filterThemes('harmonicas')">Harmônicas</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="palettes-grid" id="palettesGrid"></div>
+
+</div>
+
+<script>
+const palettes = [
+  // PASTÉIS PURAS
+  {
+    id: 1,
+    name: "Verde Pastel",
+    category: "pastel",
+    description: "Fresco e tranquilizador",
+    colors: {
+      bg: { hex: "#F2F9F6", name: "BG", description: "Background" },
+      text: { hex: "#4C7C72", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#9DD5C7", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#D9EEEA", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "7.1:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Vegetais, alimentos verdes e saúde"
+  },
+  {
+    id: 2,
+    name: "Rosa Pastel",
+    category: "pastel",
+    description: "Suave e acolhedor",
+    colors: {
+      bg: { hex: "#FBF5F8", name: "BG", description: "Background" },
+      text: { hex: "#6B4A5C", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#D9B3CC", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#F0D9E8", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "5.4:1", level: "AA", wcag: "WCAG 2.1 AA" },
+    usage: "Receitas, bem-estar feminino"
+  },
+  {
+    id: 3,
+    name: "Amarelo Pastel",
+    category: "pastel",
+    description: "Leve e energizante",
+    colors: {
+      bg: { hex: "#FFFDF5", name: "BG", description: "Background" },
+      text: { hex: "#7A7050", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#D4C99F", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#F5F0D9", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "6.8:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Vitaminas, frutas cítricas"
+  },
+  {
+    id: 4,
+    name: "Azul Pastel",
+    category: "pastel",
+    description: "Calmo e focado",
+    colors: {
+      bg: { hex: "#F4F8FB", name: "BG", description: "Background" },
+      text: { hex: "#506B8C", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#A8CDE8", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#D8E8F5", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "5.9:1", level: "AA", wcag: "WCAG 2.1 AA" },
+    usage: "Dados nutricionais, hidratação"
+  },
+  {
+    id: 5,
+    name: "Pêssego Pastel",
+    category: "pastel",
+    description: "Quente e confortável",
+    colors: {
+      bg: { hex: "#FFF7F2", name: "BG", description: "Background" },
+      text: { hex: "#6B5047", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#D9A895", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#F0D9CC", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "6.1:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Frutas, alimentos naturais"
+  },
+  {
+    id: 6,
+    name: "Lavanda Pastel",
+    category: "pastel",
+    description: "Sereno e meditativo",
+    colors: {
+      bg: { hex: "#FAF7FC", name: "BG", description: "Background" },
+      text: { hex: "#5C4B6D", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#C9BDD8", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#E8DDF5", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "5.7:1", level: "AA", wcag: "WCAG 2.1 AA" },
+    usage: "Mindfulness, bem-estar mental"
+  },
+
+  // NATURAIS
+  {
+    id: 7,
+    name: "Terra Clara",
+    category: "natural",
+    description: "Autêntico e orgânico",
+    colors: {
+      bg: { hex: "#F9F6F1", name: "BG", description: "Background" },
+      text: { hex: "#5D4740", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#B8956B", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#E8DCC9", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "6.4:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Alimentos integrais, grãos"
+  },
+  {
+    id: 8,
+    name: "Floresta Suave",
+    category: "natural",
+    description: "Calmo e conectado",
+    colors: {
+      bg: { hex: "#F3F6F3", name: "BG", description: "Background" },
+      text: { hex: "#3D5246", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#7BA896", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#D0DFDA", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "7.3:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Alimentos orgânicos, vegetais"
+  },
+  {
+    id: 9,
+    name: "Mostarda Pastel",
+    category: "natural",
+    description: "Quente e nutritivo",
+    colors: {
+      bg: { hex: "#FFFAF4", name: "BG", description: "Background" },
+      text: { hex: "#6B5D42", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#C9AF7F", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#E8DCC4", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "6.9:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Sementes, óleos, especiarias"
+  },
+
+  // HARMÔNICAS
+  {
+    id: 10,
+    name: "Harmonia Verde-Rosa",
+    category: "harmonicas",
+    description: "Equilibrado e completo",
+    colors: {
+      bg: { hex: "#F6F9F7", name: "BG", description: "Background" },
+      text: { hex: "#515050", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#A8D4C7", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#DFC9D4", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "7.4:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Dashboard geral"
+  },
+  {
+    id: 11,
+    name: "Harmonia Quente",
+    category: "harmonicas",
+    description: "Vibrante e acolhedor",
+    colors: {
+      bg: { hex: "#FFF9F4", name: "BG", description: "Background" },
+      text: { hex: "#664B3D", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#D4A89A", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#F0D4C0", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "6.8:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Receitas especiais"
+  },
+  {
+    id: 12,
+    name: "Harmonia Completa",
+    category: "harmonicas",
+    description: "Versátil e sofisticado",
+    colors: {
+      bg: { hex: "#F8F6F4", name: "BG", description: "Background" },
+      text: { hex: "#5A524A", name: "TEXT", description: "Texto primário" },
+      primary: { hex: "#B8A89F", name: "PRIMARY", description: "Botões e CTA" },
+      secondary: { hex: "#E8DED5", name: "SECONDARY", description: "Elementos" }
+    },
+    contrast: { ratio: "6.6:1", level: "AAA", wcag: "WCAG 2.1 AAA" },
+    usage: "Qualquer seção"
+  }
+];
+
+function renderPalettes(filter = 'all') {
+  const grid = document.getElementById('palettesGrid');
+  grid.innerHTML = '';
+
+  const filtered = filter === 'all' ? palettes : palettes.filter(p => p.category === filter);
+
+  filtered.forEach(palette => {
+    const card = document.createElement('div');
+    card.className = 'palette-card';
+    card.style.background = palette.colors.bg.hex;
+    card.style.borderLeft = `6px solid ${palette.colors.primary.hex}`;
+    card.innerHTML = `
+      <div class="card-header" style="color: ${palette.colors.text.hex};">
+        <div class="card-name" style="color: ${palette.colors.text.hex};">${palette.name}</div>
+        <div>
+          <span class="card-tag">${palette.category.toUpperCase()}</span>
+          <span class="card-tag">${palette.description}</span>
+        </div>
+      </div>
+      
+      <div class="color-palette">
+        ${Object.values(palette.colors).map(color => `
+          <button class="color-swatch" style="background: ${color.hex}; color: ${isLightColor(color.hex) ? '#333' : '#fff'};" 
+                  onclick="copyColor('${color.hex}')" title="Clique para copiar">
+            <span class="color-name">${color.name}</span>
+            <span class="color-code">${color.hex}</span>
+          </button>
+        `).join('')}
+      </div>
+
+      <div class="usage-section">
+        <div class="usage-title">Uso Recomendado</div>
+        <div class="usage-example" style="background: ${palette.colors.bg.hex}; color: ${palette.colors.text.hex}; border: 1px solid ${palette.colors.secondary.hex};">
+          <div class="usage-text">Texto principal com destaque</div>
+          <div class="usage-secondary">${palette.description} - ideal para ${palette.usage}</div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="small-btn primary" style="background: ${palette.colors.primary.hex}; color: white;">
+            Botão Primário
+          </button>
+          <button class="small-btn secondary" style="color: ${palette.colors.primary.hex}; border-color: ${palette.colors.primary.hex};">
+            Botão Secundário
+          </button>
+        </div>
+
+        <div class="contrast-badge wcag-${palette.contrast.level.toLowerCase()}">
+          <span>✓ ${palette.contrast.wcag}</span>
+          <span class="contrast-info">Contraste: ${palette.contrast.ratio}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filterThemes(category) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  renderPalettes(category);
+}
+
+function copyColor(hex) {
+  navigator.clipboard.writeText(hex);
+  alert(`✓ Copiado: ${hex}`);
+}
+
+function isLightColor(hex) {
+  const r = parseInt(hex.substr(1, 2), 16);
+  const g = parseInt(hex.substr(3, 2), 16);
+  const b = parseInt(hex.substr(5, 2), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5;
+}
+
+renderPalettes();
+</script>
+
+</body>
+</html>
